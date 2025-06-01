@@ -61,14 +61,21 @@ module.exports.loginUser = async (req, res) => {
       { expiresIn: '24h' }
     )
 
+    const isMobile = req.headers['user-agent'].includes('Expo')
     // Exemple Node.js avec Express
-    res.cookie('token', token, {
-      httpOnly: true,        // Protège contre XSS
-      secure: process.env.NODE_ENV === 'production',          // Seulement en HTTPS
-      sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',    // Renforce la sécurité CSRF
-      path: '/',
-      maxAge: 1000 * 60 * 60 * 24 // 1h par exemple
-    });
+    if (isMobile) {
+      // Token JWT sent for SecureStore (Expo)
+      res.status(200).json({ token })
+    } else {
+      // Token stored in a cookie HTTPOnly (React Native)
+      res.cookie('token', token, {
+        httpOnly: true,        // Protège contre XSS
+        secure: process.env.NODE_ENV === 'production',          // Seulement en HTTPS
+        sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',    // Renforce la sécurité CSRF
+        path: '/',
+        maxAge: 1000 * 60 * 60 * 24 // 1h par exemple
+      });
+    }
     
     res.status(200).json({
       message: 'Connexion réussie',
