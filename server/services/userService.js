@@ -27,11 +27,32 @@ module.exports.createUser = async serviceData => {
   }
 }
 
-module.exports.getUserProfile = async serviceData => {
+module.exports.getUserProfile = async req => {
   try {
-    const jwtToken = serviceData.headers.authorization.split('Bearer')[1].trim()
-    const decodedJwtToken = jwt.decode(jwtToken)
-    const user = await User.findOne({ _id: decodedJwtToken.id })
+    const authHeader = req.headers.authorization
+
+    if (!authHeader) {
+      throw new Error('Authorization header is missing!')
+    }
+
+    const parts = authHeader.split('Bearer ')
+
+    if (parts.length < 2) {
+      throw new Error('Token is malformed or missing!')
+    }
+
+    const userToken = parts[1].trim()
+    const decodedJwtToken = jwt.verify(
+      userToken,
+      process.env.SECRET_KEY || 'default-secret-key'
+    )
+
+    if (!decodedJwtToken.id) {
+      throw new Error('Token payload missing user ID!')
+    }
+
+    const userId = new Mongoose.Types.ObjectId(decodedJwtToken.id)
+    const user = await User.findOne({ _id: userId })
 
     if (!user) {
       throw new Error('User not found!')
@@ -40,7 +61,7 @@ module.exports.getUserProfile = async serviceData => {
     return user.toObject()
   } catch (error) {
     console.error('Error in userService.js', error)
-    throw new Error(error)
+    throw new Error(error.message || 'Error retrieving user profile')
   }
 }
 
@@ -71,26 +92,51 @@ module.exports.loginUser = async serviceData => {
   }
 }
 
-module.exports.updateUserProfile = async serviceData => {
+module.exports.updateUserProfile = async req => {
   try {
-    const jwtToken = serviceData.headers.authorization.split('Bearer')[1].trim()
-    const decodedJwtToken = jwt.decode(jwtToken)
+    const userId = req.user.id; // injecté par validateToken
+
     const user = await User.findOneAndUpdate(
-      { _id: decodedJwtToken.id },
+      { _id: userId },
       {
-        firstName: serviceData.body.firstName,
-        lastName: serviceData.body.lastName
+        firstName: req.body.firstName,
+        lastName: req.body.lastName
       },
       { new: true }
-    )
+    );
 
     if (!user) {
-      throw new Error('User not found!')
+      throw new Error('User not found!');
     }
 
-    return user.toObject()
+    return user.toObject();
   } catch (error) {
-    console.error('Error in userService.js', error)
-    throw new Error(error)
+    console.error('Error in userService.js', error);
+    throw new Error(error.message || 'Error updating user profile');
   }
-}
+};
+
+
+// module.exports.updateUserProfile = async serviceData => {
+//   try {
+//     const jwtToken = serviceData.headers.authorization.split('Bearer')[1].trim()
+//     const decodedJwtToken = jwt.decode(jwtToken)
+//     const user = await User.findOneAndUpdate(
+//       { _id: decodedJwtToken.id },
+//       {
+//         firstName: serviceData.body.firstName,
+//         lastName: serviceData.body.lastName
+//       },
+//       { new: true }
+//     )
+
+//     if (!user) {
+//       throw new Error('User not found!')
+//     }
+
+//     return user.toObject()
+//   } catch (error) {
+//     console.error('Error in userService.js', error)
+//     throw new Error(error)
+//   }
+// }
