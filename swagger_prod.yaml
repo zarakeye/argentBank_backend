@@ -5,7 +5,7 @@ info:
   version: '1.0.0'
   termsOfService: 'http://swagger.io/terms/'
 host: https://argentbank-backend-6ok3.onrender.com
-basePath: /api/v1
+# basePath: /api/v1
 schemes:
   - http
 paths:
