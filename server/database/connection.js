@@ -4,7 +4,7 @@ require('dotenv').config()
 
 const NODE_ENV = process.env.NODE_ENV || 'development'
 
-const DATABASE_URL: string | undefined = NODE_ENV === 'production' ? process.env.DATABASE_URL_PROD : process.env.DATABASE_URL_DEV// || 'mongodb://localhost/argentBankDB'
+const DATABASE_URL = NODE_ENV === 'production' ? process.env.DATABASE_URL_PROD : process.env.DATABASE_URL_DEV// || 'mongodb://localhost/argentBankDB'
 
 if (!DATABASE_URL) {
   console.error('❌ DATABASE_URL is undefined. Check your .env file and NODE_ENV setting.');
