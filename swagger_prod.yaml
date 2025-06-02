@@ -4,10 +4,7 @@ info:
   description: Contains all available API endpoints in this codebase
   version: '1.0.0'
   termsOfService: 'http://swagger.io/terms/'
-host: argentbank-backend-6ok3.onrender.com
 basePath: /api/v1
-schemes:
-  - https
 paths:
   /user/login:
     post:
