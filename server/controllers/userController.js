@@ -58,18 +58,9 @@ module.exports.loginUser = async (req, res) => {
     const responseFromService = await userService.loginUser(req.body)
     const token = responseFromService.token
 
-    // const token = jwt.sign(
-    //   { id: user._id },
-    //   process.env.SECRET_KEY || 'default-secret-key',
-    //   { expiresIn: '24h' }
-    // )
-
     const isMobile = req.headers['user-agent'].includes('Expo')
     // Exemple Node.js avec Express
-    if (isMobile) {
-      // Token JWT sent for SecureStore (Expo)
-      res.status(200).json({ token })
-    } else {
+    if (!isMobile) {
       // Token stored in a cookie HTTPOnly (React Native)
       res.cookie('token', token, {
         httpOnly: true,        // Protège contre XSS
@@ -78,17 +69,18 @@ module.exports.loginUser = async (req, res) => {
         path: '/',
         maxAge: 1000 * 60 * 60 * 24 // 1h par exemple
       })
-      // res.body = responseFromService;
+      // Token JWT sent for SecureStore (Expo)
+      res.status(200).json({ token })
     }
     
     res.status(200).json({
       message: 'Connexion réussie',
+      token: isMobile ? token : null,
       body: {
         email: user.email,
         firstName: user.firstName,
         lastName: user.lastName 
       },
-      token
     });
   } catch (error) {
     console.error('Error in loginUser (userController.js)', error)
