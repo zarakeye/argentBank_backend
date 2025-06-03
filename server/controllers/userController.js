@@ -47,19 +47,22 @@ module.exports.loginUser = async (req, res) => {
 
     const user = await User.findOne({ email })
     if (!user) {
-      return res.status(401).json({ message: 'Invalid credentials' })
+      return res.status(401).json({ message: 'Invalid user' })
     }
 
     const isPasswordValid = await bcrypt.compare(password, user.password)
     if (!isPasswordValid) {
-      return res.status(401).json({ message: 'Invalid credentials' })
+      return res.status(401).json({ message: 'Invalid password' })
     }
 
-    const token = jwt.sign(
-      { id: user._id },
-      process.env.SECRET_KEY || 'default-secret-key',
-      { expiresIn: '24h' }
-    )
+    const responseFromService = await userService.loginUser(req.body)
+    const token = responseFromService.token
+
+    // const token = jwt.sign(
+    //   { id: user._id },
+    //   process.env.SECRET_KEY || 'default-secret-key',
+    //   { expiresIn: '24h' }
+    // )
 
     const isMobile = req.headers['user-agent'].includes('Expo')
     // Exemple Node.js avec Express
@@ -74,7 +77,8 @@ module.exports.loginUser = async (req, res) => {
         sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',    // Renforce la sécurité CSRF
         path: '/',
         maxAge: 1000 * 60 * 60 * 24 // 1h par exemple
-      });
+      })
+      // res.body = responseFromService;
     }
     
     res.status(200).json({
@@ -82,8 +86,9 @@ module.exports.loginUser = async (req, res) => {
       body: {
         email: user.email,
         firstName: user.firstName,
-        lastName: user.lastName
-      }
+        lastName: user.lastName 
+      },
+      token
     });
   } catch (error) {
     console.error('Error in loginUser (userController.js)', error)
