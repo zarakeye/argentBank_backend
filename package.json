@@ -20,9 +20,9 @@
     "yamljs": "^0.3.0"
   },
   "scripts": {
-    "dev:server": "nodemon ./server/server.js",
-    "server": "node ./server/server.js",
-    "start": "node ./server/server.js"
+    "dev:server": "NODE_ENV=development nodemon ./server/server.js",
+    "server": "NODE_ENV=production node ./server/server.js",
+    "start": "NODE_ENV=production node ./server/server.js"
   },
   "devDependencies": {
     "nodemon": "^2.0.4"

@@ -17,11 +17,15 @@ const app = express()
 // Connect to the database
 dbConnection()
 
+console.log('NODE_ENV:', process.env.NODE_ENV)
 // Handle CORS issues
 app.use(cors({
   origin: process.env.NODE_ENV === 'production' ? 'https://argent-bank-gamma.vercel.app' : 'http://localhost:5173',
   credentials: true
 }))
+console.log('CORS origin:', process.env.NODE_ENV === 'production'
+  ? 'https://argent-bank-gamma.vercel.app'
+  : 'http://localhost:5173');
 // Request payload middleware
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))

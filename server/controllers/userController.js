@@ -70,10 +70,10 @@ module.exports.loginUser = async (req, res) => {
         maxAge: 1000 * 60 * 60 * 24 // 1h par exemple
       })
       // Token JWT sent for SecureStore (Expo)
-      res.status(200).json({ token })
+      return res.status(200).json({ token })
     }
     
-    res.status(200).json({
+    return res.status(200).json({
       message: 'Connexion réussie',
       token: isMobile ? token : null,
       body: {
