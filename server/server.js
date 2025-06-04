@@ -20,12 +20,12 @@ dbConnection()
 console.log('NODE_ENV:', process.env.NODE_ENV)
 // Handle CORS issues
 app.use(cors({
-  origin: process.env.NODE_ENV === 'production' ? 'https://argent-bank-gamma.vercel.app' : 'http://localhost:5173',
+  origin: process.env.NODE_ENV === 'production' ? 'https://argentblanknetlify.netlify.app' : 'http://localhost:8888',
   credentials: true
 }))
 console.log('CORS origin:', process.env.NODE_ENV === 'production'
-  ? 'https://argent-bank-gamma.vercel.app'
-  : 'http://localhost:5173');
+  ? 'https://argentblanknetlify.netlify.app'
+  : 'http://localhost:8888');
 // Request payload middleware
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
