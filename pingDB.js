@@ -26,6 +26,4 @@ async function pingDB() {
   }
 }
 
-// Ping toutes les heures
-setInterval(pingDB, 1000 * 60 * 60); // 1 heure
-pingDB(); // Premier ping immédiat
+module.exports = pingDB;

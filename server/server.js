@@ -7,7 +7,7 @@ const path = require('path')
 const NODE_ENV = process.env.NODE_ENV || 'development'
 const swaggerDocs = NODE_ENV === 'production' ? yaml.load(path.join(__dirname, '../swagger_prod.yaml')) : yaml.load(path.join(__dirname, '../swagger.yaml'))
 const dbConnection = require('./database/connection')
-const ping = require('../ping')
+const pingDB = require('../pingDB')
 const cookieParser = require('cookie-parser')
 const { set } = require('mongoose')
 
@@ -17,8 +17,9 @@ const app = express();
 
 // Connect to the database
 dbConnection();
-ping();
-setInterval(ping, 1000 * 60 * 60);
+// Ping toutes les heures
+setInterval(pingDB, 1000 * 60 * 60); // 1 heure
+pingDB(); // Premier ping immédiat
 
 app.get('/ping', (req, res) => {
   res.status(200).send('pong')
