@@ -36,3 +36,5 @@ config/runtime.yaml
 .DS_Store
 # Local Netlify folder
 .netlify
+
+package-lock.json
