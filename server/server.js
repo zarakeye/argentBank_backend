@@ -20,6 +20,10 @@ dbConnection();
 ping();
 setInterval(ping, 1000 * 60 * 60);
 
+app.get('/ping', (req, res) => {
+  res.status(200).send('pong')
+});
+
 // Handle CORS issues
 app.use(cors({
   origin: process.env.NODE_ENV === 'production' ? 'https://argentblanknetlify.netlify.app' : 'http://localhost:8888',
