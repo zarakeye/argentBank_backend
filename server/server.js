@@ -27,7 +27,7 @@ pingDB(); // Premier ping immédiat
 
 // Handle CORS issues
 app.use(cors({
-  origin: process.env.NODE_ENV === 'production' ? 'https://argentblanknetlify.netlify.app' : 'http://localhost:8888',
+  origin: process.env.NODE_ENV === 'production' ? 'https://argentbanknetlify.netlify.app' : 'http://localhost:8888',
   credentials: true
 }))
 // Request payload middleware
