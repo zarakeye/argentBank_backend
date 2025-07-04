@@ -15,15 +15,15 @@ dotEnv.config();
 
 const app = express();
 
+app.get('/ping', (req, res) => {
+  res.status(200).send('pong')
+});
+
 // Connect to the database
 dbConnection();
 // Ping toutes les heures
 setInterval(pingDB, 1000 * 60 * 5); // Every 5 minutes
 pingDB(); // Premier ping immédiat
-
-app.get('/ping', (req, res) => {
-  res.status(200).send('pong')
-});
 
 // Handle CORS issues
 app.use(cors({
