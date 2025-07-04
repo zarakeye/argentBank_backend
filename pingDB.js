@@ -16,9 +16,6 @@ async function pingDB() {
       console.log('Ping réussi :', stats.ok ? 'OK' : 'Échec', '-', new Date().toISOString());
       return;
     }
-    // await client.connect();
-    // const stats = await client.db().stats();
-    // console.log('Ping réussi :', stats.ok ? 'OK' : 'Échec', '-', new Date().toISOString());
   } catch (err) {
     console.error('Erreur MongoDB :', err.message);
   } finally {

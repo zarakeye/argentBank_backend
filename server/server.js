@@ -18,7 +18,7 @@ const app = express();
 // Connect to the database
 dbConnection();
 // Ping toutes les heures
-setInterval(pingDB, 1000 * 60 * 60); // 1 heure
+setInterval(pingDB, 1000 * 60 * 5); // Every 5 minutes
 pingDB(); // Premier ping immédiat
 
 app.get('/ping', (req, res) => {
